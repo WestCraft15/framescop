@@ -1,5 +1,2 @@
-# FrameScop #
-This is a tool for analyzing Petscop videos 1 frame at a time. Currently it's used to annotate the button inputs but I want to do more with it.
-
-I'll add info to this later, for now, here's the link to production:
-http://notexplosive.net/framescop
+# Framescop: Giftscop Edition #
+This tool is used to analyze Petscop videos frame by frame and manually record the player's inputs. Originally made by [notexplosive](https://github.com/notexplosive), I ([WestCraft15](https://github.com/WestCraft15)) have modified it to better suit the needs of the Giftscop community. I have added builds to the releases section, so theres no longer a need for outside links.
