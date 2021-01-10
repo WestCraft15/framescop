@@ -62,14 +62,6 @@ Timeline.draw = function(self)
         love.graphics.getWidth() * self.film.playhead / self.film.totalFrames,
         32
     )
-    love.graphics.setColor(timelineLoadedBufferColor())
-    love.graphics.rectangle(
-        "fill",
-        currentViewedFramePostion,
-        love.graphics.getHeight() - self.height,
-        currentFrontierPosition,
-        self.height
-    )
     love.graphics.setColor(black())
     love.graphics.rectangle("line", 0, love.graphics.getHeight() - 32, love.graphics.getWidth(), 32)
 

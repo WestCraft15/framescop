@@ -2,12 +2,14 @@ require("global")
 require("input")
 require("colors")
 require("map")
+require("film")
 
 local Button = require("button")
 local ctlStateEnum = require("controller_state")
 local Film = require("film")
 local Keyframe = require("keyframe")
 local ExtractAnimation = require("extract_animation")
+local FileManager = require("file_manager")
 
 require("tests.test_all")
 
@@ -16,7 +18,7 @@ love.window.setIcon(iconData)
 
 function love.load(arg)
     -- Setup window
-    love.window.updateMode(800, 600, {resizable = true})
+    love.window.updateMode(800, 600, {resizable = false})
     updateWindowTitle()
 
     -- Build working dir cache
@@ -25,6 +27,15 @@ function love.load(arg)
     local author = love.filesystem.read("author")
     if author then
         CURRENT_AUTHOR = author
+    end
+end
+
+function love.quit()
+    if FILE_NAME then
+        for i = 1, #DECOMPRESSED_FRAMES do
+            love.filesystem.remove("framedata/" .. FILE_NAME .. "/" .. DECOMPRESSED_FRAMES[i] .. ".png")
+        end
+        love.filesystem.remove("framedata/" .. FILE_NAME .. "/loadedFrames.txt")
     end
 end
 
@@ -49,48 +60,6 @@ end
 function love.draw()
     love.graphics.setFont(BigFont)
 
-    if CURRENT_FRAMES_DIR ~= "" then
-        local w, h = love.graphics.getDimensions()
-        local text = "Tool is extracting frames!"
-        local items = love.filesystem.getDirectoryItems("framedata/" .. CURRENT_FRAMES_DIR)
-        love.graphics.setColor(1, 1, 1)
-        love.graphics.circle("line", w / 2, h / 2, 256 + math.random(32), math.random(32) + 16)
-
-        if #items > 10 then
-            love.graphics.print(CURRENT_FRAMES_INDEX)
-            local advanced = false
-            if CURRENT_FRAMES_INDEX < #items then
-                advanced = true
-                CURRENT_FRAMES_INDEX = #items
-            end
-
-            if advanced then
-                local image =
-                    ExtractAnimation.new(
-                    "framedata/" .. CURRENT_FRAMES_DIR .. "/" .. CURRENT_FRAMES_INDEX - 1 .. ".png"
-                )
-            end
-        end
-
-        ExtractAnimation.draw()
-        if ExtractAnimation.timeSpentStalled > 60 * 3 then
-            text = "Looks like we're done!"
-
-            -- This means we never loaded a frame
-            if #items == 0 then
-                text = "Something went wrong with ffmpeg\nor your mp4 file."
-                EXTERNAL_COMMANDS_ALLOWED = false
-            end
-        end
-
-        love.graphics.print(
-            text,
-            math.floor(w / 2 - love.graphics.getFont():getWidth(text) / 2),
-            math.floor(h / 2 + 128)
-        )
-        return
-    end
-
     if not currentFilm then
         if CURRENT_AUTHOR == "" then
             CURRENT_TEXT_BOX.on = true
@@ -114,13 +83,7 @@ function love.draw()
         local binaries = loadWorkingDirectory()
         if #binaries == 0 then
             love.filesystem.createDirectory("framedata")
-            if not EXTERNAL_COMMANDS_ALLOWED then
-                love.graphics.print(
-                    "No data found and it looks like in-app frame\nextraction isn't working.\n\n\nDrag your mp4 onto the frame-extractor.bat\nand then restart Framescop"
-                )
-            else
-                love.graphics.print("No data found, but we can fix that!\nPlease drag an MP4 video onto this window.\n\nYou may need to restart if you just added a new video")
-            end
+            love.graphics.print("No data found. Please drag an MP4\nvideo onto the included .bat file\n\nYou will need to restart if you just added a new video.")
         end
 
         -- File select menu: I threw this together in 5 minutes.

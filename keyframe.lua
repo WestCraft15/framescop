@@ -70,19 +70,19 @@ Keyframe.drawUI = function(film)
     love.graphics.setColor(white())
 
     local dis = 24
-    Keyframe.drawButton("up", x + dis, y)
-    Keyframe.drawButton("down", x + dis, y + dis * 2)
-    Keyframe.drawButton("left", x, y + dis)
-    Keyframe.drawButton("right", x + dis * 2, y + dis)
+    Keyframe.drawButton("up",       x + dis,           y,           7.5,  8.5,  1.25)
+    Keyframe.drawButton("down",     x + dis,           y + dis * 2, 7.5,  10.5, 1.25)
+    Keyframe.drawButton("left",     x,                 y + dis,     5.5,  9.5,  1.25)
+    Keyframe.drawButton("right",    x + dis * 2,       y + dis,     9.5,  9.5,  1.25)
 
     dis = 32
-    Keyframe.drawButton("x", x + 128 + dis, y + dis * 2)
-    Keyframe.drawButton("triangle", x + 128 + dis, y)
-    Keyframe.drawButton("square", x + 128, y + dis)
-    Keyframe.drawButton("circle", x + 128 + dis * 2, y + dis)
+    Keyframe.drawButton("x",        x + 128 + dis,     y + dis * 2, 10,   10.5,  1.2)
+    Keyframe.drawButton("triangle", x + 128 + dis,     y,           10,   10.5,  1.2)
+    Keyframe.drawButton("square",   x + 128,           y + dis,     10,   10.5,  1.2)
+    Keyframe.drawButton("circle",   x + 128 + dis * 2, y + dis,     10,   10.5,  1.2)
 
-    Keyframe.drawButton("select", x + 128 - 64 + 16, y)
-    Keyframe.drawButton("start", x + 128 - 16, y)
+    Keyframe.drawButton("select",   x + 80 - 4,        y,           13.5, 8,     0.95)
+    Keyframe.drawButton("start",    x + 112 + 4,       y,           5,    8.5,   1.4)
     love.graphics.setColor(white())
 
     -- display notes
@@ -97,7 +97,7 @@ Keyframe.drawUI = function(film)
     end
 end
 
-function Keyframe.drawButton(buttonName, x, y)
+function Keyframe.drawButton(buttonName, x, y, relx, rely, scale)
     local r = 16
 
     -- helpful for debugging!
@@ -111,20 +111,6 @@ function Keyframe.drawButton(buttonName, x, y)
     end
 
     love.graphics.setColor(white())
-    if isDirection(buttonName) then
-        local angles = {}
-        angles["up"] = math.pi
-        angles["down"] = 0
-        angles["left"] = math.pi / 2
-        angles["right"] = 0 - math.pi / 2
-
-        local angle = 0
-        if angles[buttonName] then
-            angle = angles[buttonName]
-        end
-
-        drawButtonGraphic("direction", x, y, angle)
-    end
 
     -- detect hovers
     local mx, my = love.mouse.getPosition()
@@ -144,21 +130,7 @@ function Keyframe.drawButton(buttonName, x, y)
 
     love.graphics.setColor(white())
 
-    if isFaceButton(buttonName) then
-        drawButtonGraphic(buttonName, x, y)
-    end
-
-    if isStartSelect(buttonName) then
-        local label = "??"
-        if buttonName == "start" then
-            label = "Start"
-        end
-        if buttonName == "select" then
-            label = "Sel"
-        end
-
-        love.graphics.print(label, x, y, 0, 1, 1, love.graphics.getFont():getWidth(label) / 2, 8)
-    end
+    drawButtonGraphic(buttonName, x, y, relx, rely, scale)
 
     love.graphics.setColor(white())
 

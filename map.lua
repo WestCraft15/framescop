@@ -94,7 +94,11 @@ function Map.draw()
 
         if hoveredFrame then
             love.graphics.setColor(1, 1, 1, 0.75)
-            love.graphics.draw(love.graphics.newImage(currentFilm.path .. "/" .. hoveredFrame .. ".png"))
+            if love.filesystem.exists(currentFilm.path .. "/" .. hoveredFrame .. ".png") then
+                love.graphics.draw(love.graphics.newImage(currentFilm.path .. "/" .. hoveredFrame .. ".png"))
+            else
+                love.graphics.draw(love.graphics.newImage("noimage.png"))
+            end
         end
     end
 

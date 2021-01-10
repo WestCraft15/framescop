@@ -19,13 +19,23 @@ Film.new = function(dirPath)
     FILE_NAME = split[#split]
     FileMgr.trackPath = FILE_NAME .. ".tsv"
     updateWindowTitle()
-
+    
     self.playhead = 1
+    
+    self.allFrames = 0
+    self.offsets = love.filesystem.read(dirPath .. "/offsets.txt"):split("\n")
+    for i = 2, #self.offsets do
+        self.allFrames = self.allFrames + tonumber(self.offsets[i])
+    end
+
+    if love.filesystem.exists("framedata/" .. FILE_NAME .. "/loadedFrames.txt") then
+        self:h_removeFrames()
+    end
 
     self.title = dirPath
-    self.fps = 15
-    self.totalFrames = #love.filesystem.getDirectoryItems(dirPath) - 1
+    self.fps = 30
     self.path = dirPath
+    self.totalFrames = 0
     self.warning = false
     self.warningTimer = 0
     self.idleTimer = 1
@@ -35,13 +45,16 @@ Film.new = function(dirPath)
     self.playRealTime = false
     self.realTime = 0
     self.timeline = Timeline.new(self)
-
+    self.currentChunk = 0
+    self.chunkSize = 15
+    
     self.data = {}
-    self:h_loadAt(1, 60)
-
+    self:h_decompress(1)
+    self:h_loadAt(1, self.chunkSize - 1)
+    
     FileMgr.init(self)
     FileMgr.load(self)
-
+    
     return self
 end
 
@@ -49,53 +62,27 @@ Film.update = function(self, dt)
     -- This ticks up every frame but gets reset when a key is pressed
     self.idleTimer = self.idleTimer + dt
     self.preloading = false
-
+    
     -- Handle realtime playback
     if self.playRealTime then
         self.idleTimer = 0
         self.realTime = self.realTime + dt * self.fps
         self.playhead = math.floor(self.realTime) + 1
+        if self:h_boundedFromPlayhead(0) ~= self.playhead then
+            self.playhead = self:h_boundedFromPlayhead(0)
+            self.playRealTime = false
+        end
     else
         self.realTime = self.playhead
-    end
-
-    if not self.data[self.playhead + 10] then
-        printst("Loading...")
-        self.warning = true
-        self.warningTimer = self.warningTimer + dt
-
-        -- Warning enables the red border. If it's been red for 1 second, just load the next
-        -- chunk, we warned them so they will expect the lag.
-        if self.warningTimer > .25 then
-            self:h_loadAt(self:h_nextUnloadedFromPlayhead(), 15)
-            self.warningTimer = 0
-        end
-    else
-        self.warning = false
-        self.warningTimer = 0
-    end
-
-    if self.idleTimer > 1 then
-        if self:h_loadAt(self:h_nextUnloadedFromPlayhead(), 15) then
-            self.preloading = true
-        end
-    end
-
-    if not self.data[self.playhead] then
-        -- How many frames back to we render if available?
-        -- TODO: extract this into a constant?
-        local backFrames = 8
-        if self.playhead < backFrames then
-            backFrames = self.playhead
-        end
-        self:h_loadAt(self.playhead - backFrames, 15)
-    end
-
-    -- TODO: This could be a lot smarter.
-    if self.framesInMemory > 400 then
         self:h_clearData()
     end
-
+    
+    if math.floor(self.playhead / self.chunkSize) ~= self.currentChunk then
+        self:h_loadAt(((self.currentChunk + 1) * self.chunkSize) + 1, self.chunkSize)
+        self:h_eraseAt(((self.currentChunk - 2) * self.chunkSize) + 1, self.chunkSize)
+        self.currentChunk = math.floor(self.playhead / self.chunkSize)
+    end
+    
     self.timeline:update(dt)
 end
 
@@ -105,7 +92,7 @@ Film.draw = function(self)
         local scalex = love.graphics.getWidth() / frame:getWidth()
         local scaley = love.graphics.getHeight() / frame:getHeight()
         love.graphics.draw(frame, 0, 0, 0, scalex, scaley)
-
+        
         self.timeline:draw()
     end
 end
@@ -114,7 +101,7 @@ Film.getFrameImage = function(self, index)
     if self.data[index] then
         return self.data[index]
     end
-
+    
     if self:h_loadAt(index, 14) then
         return self.data[index]
     end
@@ -139,19 +126,19 @@ Film.timeString = function(self, x)
     local video_frame = (x - 1) * (realFPS / self.fps)
     local seconds = math.floor(video_frame / realFPS)
     return string.format("%02d", math.floor(seconds / 60)) ..
-        ":" .. string.format("%02d", seconds % 60) .. ";" .. string.format("%02d", video_frame % realFPS)
+    ":" .. string.format("%02d", seconds % 60) .. ";" .. string.format("%02d", video_frame % realFPS)
 end
 
 Film.timeStringToFrames = function(self, timeString)
     if timeString == nil then
         timeString = self:timeString()
     end
-
+    
     local tsSplitOnColon = timeString:split(":")
     local minutes = tsSplitOnColon[1]
     local seconds = tsSplitOnColon[2]:split(";")[1] + minutes * 60
-    local video_frame = tonumber(timeString:split(";")[2]) / 2
-
+    local video_frame = tonumber(timeString:split(";")[2])
+    
     local frames = seconds * self.fps + video_frame + 1
     print("read " .. timeString .. " as " .. frames)
     return frames
@@ -172,21 +159,32 @@ Film.h_loadAt = function(self, location, size)
     if location < 1 then
         location = 1
     end
-
+    
     if location + size > self.totalFrames then
         size = self.totalFrames - location
     end
-
+    
     local loadedSomething = false
-
+    
     for i = location, location + size do
         if not self.data[i] then
-            self.framesInMemory = self.framesInMemory + 1
-            self.data[i] = love.graphics.newImage(self.path .. "/" .. i .. ".png")
-            loadedSomething = true
+            if love.filesystem.exists(self.path .. "/" .. i .. ".png") then
+                self.framesInMemory = self.framesInMemory + 1
+                self.data[i] = love.graphics.newImage(self.path .. "/" .. i .. ".png")
+                loadedSomething = true
+            else
+                local findChunk = 0
+                for j = 2, #self.offsets do
+                    findChunk = findChunk + tonumber(self.offsets[j])
+                    if i < findChunk then
+                        self:h_decompress(j - 1)
+                        break
+                    end
+                end
+            end
         end
     end
-
+    
     return loadedSomething
 end
 
@@ -194,11 +192,11 @@ Film.h_eraseAt = function(self, location, size)
     if location < 1 then
         location = 1
     end
-
+    
     if location + size > self.totalFrames then
         size = self.totalFrames - location
     end
-
+    
     for i = location, location + size do
         if self.data[i] then
             -- Delete from table, hand to garbage collector
@@ -217,7 +215,7 @@ Film.h_nextUnloadedFromPlayhead = function(self)
             return i
         end
     end
-
+    
     return 0
 end
 
@@ -229,11 +227,50 @@ Film.h_earliestLoadedFrame = function(self)
     end
 end
 
+Film.h_decompress = function(self, chunk)
+    local timeToExtract = chunk - 1
+    
+    local startOffset = 1
+    local endOffset = 0
+    for i = 2, chunk + 1 do
+        if i ~= chunk + 1 then
+            startOffset = startOffset + tonumber(self.offsets[i])
+            endOffset = endOffset + tonumber(self.offsets[i])
+        else
+            endOffset = endOffset + tonumber(self.offsets[i])
+        end
+    end
+    
+    local output = love.filesystem.getSaveDirectory() .. "\\framedata\\" .. FILE_NAME
+    
+    local command =
+    '.\\ffmpeg -i "' .. output .. '\\' .. timeToExtract .. '.mp4" -start_number ' .. startOffset .. ' -r 30 -s 320x240 "' .. output .. '\\%d.png"'
+    local thread = love.thread.newThread("ffmpeg_bootstrap.lua")
+    THREAD_POOL[#THREAD_POOL + 1] = thread
+    thread:start(command, output)
+    local fullList = ""
+    for j = startOffset, endOffset do
+        table.insert(DECOMPRESSED_FRAMES, j)
+        fullList = fullList .. j .. "\n"
+    end
+    if love.filesystem.exists("framedata/" .. FILE_NAME .. "/loadedFrames.txt") then
+        love.filesystem.append("framedata/" .. FILE_NAME .. "/loadedFrames.txt", fullList)
+    else
+        love.filesystem.write("framedata/" .. FILE_NAME .. "/loadedFrames.txt", fullList)
+    end
+    for i = 1, 2, 0 do
+        if #love.filesystem.getDirectoryItems(self.path) == #DECOMPRESSED_FRAMES + #self.offsets + 1 then
+            self.totalFrames = self.allFrames - 1
+            break
+        end
+    end
+end
+
 -- Hard reset on memory usage. Throws everything to the garbage collector except for
 -- the most nearby stuff
 Film.h_clearData = function(self)
     for i = 0, self.totalFrames do
-        if i < self.playhead - 10 or i > self.playhead + 240 then
+        if i < (((math.floor(self.playhead / self.chunkSize) - 2) * self.chunkSize) + 1) or i > (((math.floor(self.playhead / self.chunkSize) + 1) * self.chunkSize) + 1) then
             if self.data[i] then
                 self.framesInMemory = self.framesInMemory - 1
                 self.data[i]:release()
@@ -254,6 +291,16 @@ Film.h_boundedFromPlayhead = function(self, offset)
         val = self.totalFrames
     end
     return val
+end
+
+Film.h_removeFrames = function(self)
+    local framesToDelete = love.filesystem.read("framedata/" .. FILE_NAME .. "/loadedFrames.txt"):split("\n")
+    for i = 1, #framesToDelete do
+        if love.filesystem.exists("framedata/" .. FILE_NAME .. "/" .. framesToDelete[i] .. ".png") then
+            love.filesystem.remove("framedata/" .. FILE_NAME .. "/" .. framesToDelete[i] .. ".png")
+        end
+    end
+    love.filesystem.remove("framedata/" .. FILE_NAME .. "/loadedFrames.txt")
 end
 
 return Film

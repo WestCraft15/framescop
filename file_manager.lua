@@ -25,28 +25,6 @@ function love.filedropped(file)
     local dotSeparated = file:getFilename():split(".")
     local extension = dotSeparated[#dotSeparated]
 
-    if not currentFilm then
-        local nameSplitSpaces = name:split(".")[1]:split(" ")
-        local nameNoSpaces = ""
-        for i = 1, #nameSplitSpaces do
-            nameNoSpaces = nameNoSpaces .. nameSplitSpaces[i]
-        end
-        local output = love.filesystem.getSaveDirectory() .. "\\framedata\\" .. nameNoSpaces
-        local OSName = love.system.getOS()
-        if extension == "mp4" and OSName == "Windows" then
-            local command =
-                '.\\ffmpeg -i "' .. file:getFilename() .. '" -r 15 -s 320x240 "' .. output .. '\\%d.png" > output.txt'
-            local thread = love.thread.newThread("ffmpeg_bootstrap.lua")
-            love.filesystem.createDirectory("framedata/" .. nameNoSpaces)
-            for _, v in pairs(love.filesystem.getDirectoryItems("framedata/" .. nameNoSpaces)) do
-                love.filesystem.remove("framedata/" .. nameNoSpaces .. "/" .. v)
-            end
-            THREAD_POOL[#THREAD_POOL + 1] = thread
-            CURRENT_FRAMES_DIR = nameNoSpaces
-            thread:start(command, output)
-        end
-    end
-
     if currentFilm and extension == "tsv" then
         KEYFRAME_LIST_GLOBAL = {}
         Keyframe.list = KEYFRAME_LIST_GLOBAL

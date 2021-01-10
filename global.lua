@@ -1,6 +1,9 @@
 require("status")
 require("loadfile")
 
+filePath = ""
+alreadyRepacking = false
+
 -- General state
 KEYFRAME_LIST_GLOBAL = {}
 CURRENT_TEXT_BOX = require "textbox"
@@ -25,6 +28,7 @@ DELIM = "\t"
 FILE_NAME = "empty"
 APP_NAME = "Framescop V1.5"
 CURRENT_AUTHOR = ""
+DECOMPRESSED_FRAMES = {}
 
 -- Fonts
 LOVEdefaultFont = love.graphics:getFont()
@@ -33,34 +37,57 @@ BigFont = love.graphics.newFont(24)
 -- Images
 BUTTON_SPRITE_SHEET = love.graphics.newImage("buttons.png")
 BUTTON_SPRITES = {}
-BUTTON_SPRITES["direction"] = love.graphics.newQuad(0, 0, 32, 32, BUTTON_SPRITE_SHEET:getDimensions())
-BUTTON_SPRITES["x"] = love.graphics.newQuad(32, 0, 32, 32, BUTTON_SPRITE_SHEET:getDimensions())
-BUTTON_SPRITES["circle"] = love.graphics.newQuad(64, 0, 32, 32, BUTTON_SPRITE_SHEET:getDimensions())
-BUTTON_SPRITES["triangle"] = love.graphics.newQuad(96, 0, 32, 32, BUTTON_SPRITE_SHEET:getDimensions())
-BUTTON_SPRITES["square"] = love.graphics.newQuad(128, 0, 32, 32, BUTTON_SPRITE_SHEET:getDimensions())
+BUTTON_SPRITES["down"] = love.graphics.newQuad(0, 0, 15, 20, BUTTON_SPRITE_SHEET:getDimensions())
+BUTTON_SPRITES["left"] = love.graphics.newQuad(16, 0, 15, 19, BUTTON_SPRITE_SHEET:getDimensions())
+BUTTON_SPRITES["up"] = love.graphics.newQuad(32, 0, 15, 20, BUTTON_SPRITE_SHEET:getDimensions())
+BUTTON_SPRITES["right"] = love.graphics.newQuad(48, 0, 15, 19, BUTTON_SPRITE_SHEET:getDimensions())
+BUTTON_SPRITES["x"] = love.graphics.newQuad(0, 21, 20, 21, BUTTON_SPRITE_SHEET:getDimensions())
+BUTTON_SPRITES["circle"] = love.graphics.newQuad(21, 21, 20, 21, BUTTON_SPRITE_SHEET:getDimensions())
+BUTTON_SPRITES["triangle"] = love.graphics.newQuad(42, 21, 20, 21, BUTTON_SPRITE_SHEET:getDimensions())
+BUTTON_SPRITES["square"] = love.graphics.newQuad(63, 21, 20, 21, BUTTON_SPRITE_SHEET:getDimensions())
+BUTTON_SPRITES["start"] = love.graphics.newQuad(64, 0, 14, 17, BUTTON_SPRITE_SHEET:getDimensions())
+BUTTON_SPRITES["select"] = love.graphics.newQuad(145, 0, 27, 17, BUTTON_SPRITE_SHEET:getDimensions())
 
-function drawButtonGraphic(buttonName, x, y, angle)
-    love.graphics.draw(BUTTON_SPRITE_SHEET, BUTTON_SPRITES[buttonName], x, y, angle, 1, 1, 16, 16)
+function drawButtonGraphic(buttonName, x, y, relx, rely, scale)
+	love.graphics.draw(BUTTON_SPRITE_SHEET, BUTTON_SPRITES[buttonName], x, y, 0, scale, scale, relx, rely)
 end
 
 -- Window setup
 function updateWindowTitle()
     local easterEgg = {
-        "Framescop kid very smart",
-        "Remember being framescop?",
-        "That's a dead framescop",
-        "Some things, you just can't framescop",
-        "Framescop: Rainbow Tool",
-        "You're in the other framescop too!",
-        "Your name is Carrie Framescop",
-        "Look how Framescop you are!",
-        "Framescop NLM",
-        "framescop-dancing-sign",
-        "Framescop on a chalkboard",
-        "Press Framescop"
+		'"So how does it become giftstrot"',
+		'"Giftcrop Protip: An"',
+		'"Bass of Ace"',
+		'"diuscord is a software"',
+		'[ANNOUNCEMENT]AAAH',
+		'"imagine you put in a face and it says" "kris in the real"',
+		'"is luig eat spagegeg tit"',
+		'"Logic Pro 8 Academic Edition Copyright 2007 Apple Computers" "i agree tbh"',
+		'"fried bee"',
+		'"should we summon stan again"',
+		'"lets do a ritual!"',
+		'"whats a sleep" "trial version of death"',
+		'"Where is the comedy skeleton"',
+		'"solve land ownership disputes on court" "acre attorney"',
+		'"i like the idea that belle h"',
+		'"I\'m scared" "same"',
+		'"the awoglet who what when where why and how"',
+		'"p3d shirt would be just a recreation of a shirt but made inaccurately"',
+		'"we need more sd matadors" "no"',
+		'"i hate anita" "That\'s depression"',
+		'"dynamic smug cheese"',
+		'"i dont care im adding Cheese Cubes"',
+		'"door" "grab" "door eat"',
+		'"speaking of ntsc" "i solved petscop"',
+		'"Everybody gangsta till the metal cylinder starts floating"',
+		'"GUYS KIND STRANGER IS DEAD NOW NO REDDIT GOLD NOW"',
+		'"we hereby declare your work zone lead inaccurate"',
+		'"you guys like ntsc" "james when did you become a drug dealer"',
+		'"Big chungus has unfortunately died in the 1965 Rat Islands earthquake"',
+		'"petscop 0" "*20"'
     }
     local title = easterEgg[love.math.random(1, #easterEgg)]
-    love.window.setTitle(title .. " - " .. FILE_NAME)
+    love.window.setTitle("Framescop - " .. title .. " - " .. FILE_NAME)
 end
 
 

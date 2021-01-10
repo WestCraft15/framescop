@@ -15,7 +15,7 @@ function loadWorkingDirectory()
         if love.filesystem.getInfo(path).type == "directory" then
             local files = love.filesystem.getDirectoryItems(path)
             for j, filename in ipairs(files) do
-                if filename == "1.png" then
+                if filename == "0.mp4" then
                     obj = {}
                     obj.path = path
                     obj.filename = folderName
@@ -24,6 +24,8 @@ function loadWorkingDirectory()
                     obj.niceTitle = lines[1]
                     obj.fps = tonumber(lines[2])
                     WorkingDirectoryBinaries[#WorkingDirectoryBinaries + 1] = obj
+                elseif filename == "1.png" then
+                    -- TODO: Have this compress the PNGs before loading them
                 end
             end
         end
