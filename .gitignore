@@ -1,7 +1,13 @@
 framedata*
 ffmpeg.exe
 ffmpeg_logs.txt
-.vs/VSWorkspaceState.json
-.vs/slnx.sqlite
-.vs/ProjectSettings.json
-.vs/framescop-master/v16/.suo
+.vs*
+Framescop.exe
+love.dll
+love.exe
+lua51.dll
+mpg123.dll
+output.txt
+README.txt
+SDL2.dll
+framescop-giftscop-edition-master.zip
