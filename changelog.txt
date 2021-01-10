@@ -1,0 +1,20 @@
+v0.2:
++ Video Compression
++ Dynamic Video Decompression
++ Maintain Aspect Ratio
+* FPS Changed to 30 from 15
+* RAM Improvements
+* Button Icons Changed to Match Petscop
+* Incompatible With Old Videos
+- Removed Drag and Drop Video Conversion (Might be Reimplemented)
+- Removed Run.bat and Run.sh
+- Removed Unnecessary .dll Files
+
+Planned Features:
++ Delete Videos From Menu
++ Options Menu
+	+ Change Window Size
+	+ Change Username
++ Button to Return to Main Menu From Input Editor
++ Backwards Compatibility
++ Button to Show Input Files in File Explorer

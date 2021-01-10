@@ -57,34 +57,16 @@ function updateWindowTitle()
     local easterEgg = {
 		'"So how does it become giftstrot"',
 		'"Giftcrop Protip: An"',
-		'"Bass of Ace"',
-		'"diuscord is a software"',
-		'[ANNOUNCEMENT]AAAH',
+		'"discord is a software"',
 		'"imagine you put in a face and it says" "kris in the real"',
-		'"is luig eat spagegeg tit"',
-		'"Logic Pro 8 Academic Edition Copyright 2007 Apple Computers" "i agree tbh"',
-		'"fried bee"',
-		'"should we summon stan again"',
-		'"lets do a ritual!"',
-		'"whats a sleep" "trial version of death"',
-		'"Where is the comedy skeleton"',
-		'"solve land ownership disputes on court" "acre attorney"',
 		'"i like the idea that belle h"',
-		'"I\'m scared" "same"',
 		'"the awoglet who what when where why and how"',
 		'"p3d shirt would be just a recreation of a shirt but made inaccurately"',
 		'"we need more sd matadors" "no"',
-		'"i hate anita" "That\'s depression"',
 		'"dynamic smug cheese"',
-		'"i dont care im adding Cheese Cubes"',
-		'"door" "grab" "door eat"',
-		'"speaking of ntsc" "i solved petscop"',
-		'"Everybody gangsta till the metal cylinder starts floating"',
-		'"GUYS KIND STRANGER IS DEAD NOW NO REDDIT GOLD NOW"',
 		'"we hereby declare your work zone lead inaccurate"',
 		'"you guys like ntsc" "james when did you become a drug dealer"',
-		'"Big chungus has unfortunately died in the 1965 Rat Islands earthquake"',
-		'"petscop 0" "*20"'
+		'"what is even happening" "I am recreating tony" "oh no"'
     }
     local title = easterEgg[love.math.random(1, #easterEgg)]
     love.window.setTitle("Framescop - " .. title .. " - " .. FILE_NAME)
