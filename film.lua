@@ -38,7 +38,6 @@ Film.new = function(dirPath)
     self.totalFrames = 0
     self.warning = false
     self.warningTimer = 0
-    self.idleTimer = 1
     self.framesInMemory = 0
     self.cachedFrontier = 0
     self.preloading = false
@@ -59,13 +58,10 @@ Film.new = function(dirPath)
 end
 
 Film.update = function(self, dt)
-    -- This ticks up every frame but gets reset when a key is pressed
-    self.idleTimer = self.idleTimer + dt
     self.preloading = false
     
     -- Handle realtime playback
     if self.playRealTime then
-        self.idleTimer = 0
         self.realTime = self.realTime + dt * self.fps
         self.playhead = math.floor(self.realTime) + 1
         if self:h_boundedFromPlayhead(0) ~= self.playhead then
@@ -148,10 +144,6 @@ Film.getTrackPath = function(self)
     return FileMgr.trackPath
 end
 
-Film.getFullTrackPath = function(self)
-    return love.filesystem.getAppdataDirectory() .. "/" .. self:getTrackPath()
-end
-
 --- HELPER FUNCTIONS BELOW THIS POINT ---
 
 -- Helper function to keep the constructor looking clean
@@ -207,26 +199,6 @@ Film.h_eraseAt = function(self, location, size)
     end
 end
 
-Film.h_nextUnloadedFromPlayhead = function(self)
-    -- If we've already loaded 240 frames out, we're good.
-    for i = self.playhead, self:h_boundedFromPlayhead(240) do
-        if self.data[i] == null then
-            self.cachedFrontier = i
-            return i
-        end
-    end
-    
-    return 0
-end
-
-Film.h_earliestLoadedFrame = function(self)
-    for i = 0, self.playhead do
-        if self.data[i] == nil then
-            return i
-        end
-    end
-end
-
 Film.h_decompress = function(self, chunk)
     local timeToExtract = chunk - 1
     
@@ -243,8 +215,7 @@ Film.h_decompress = function(self, chunk)
     
     local output = love.filesystem.getSaveDirectory() .. "\\framedata\\" .. FILE_NAME
     
-    local command =
-    '.\\ffmpeg -i "' .. output .. '\\' .. timeToExtract .. '.mp4" -start_number ' .. startOffset .. ' -r 30 -s 320x240 "' .. output .. '\\%d.png"'
+    local command = '.\\ffmpeg -i "' .. output .. '\\' .. timeToExtract .. '.mp4" -start_number ' .. startOffset .. ' -r 30 -s 320x240 "' .. output .. '\\%d.png"'
     local thread = love.thread.newThread("ffmpeg_bootstrap.lua")
     THREAD_POOL[#THREAD_POOL + 1] = thread
     thread:start(command, output)
