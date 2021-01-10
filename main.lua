@@ -8,7 +8,6 @@ local Button = require("button")
 local ctlStateEnum = require("controller_state")
 local Film = require("film")
 local Keyframe = require("keyframe")
-local ExtractAnimation = require("extract_animation")
 local FileManager = require("file_manager")
 
 require("tests.test_all")
