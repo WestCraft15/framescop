@@ -5,7 +5,8 @@ v0.2:
 * FPS Changed to 30 from 15
 * RAM Improvements
 * Button Icons Changed to Match Petscop
-* Incompatible With Old Videos
+* Fixed Unbounded Playhead
+- Incompatible With Old Videos
 - Removed Drag and Drop Video Conversion (Might be Reimplemented)
 - Removed Run.bat and Run.sh
 - Removed Unnecessary .dll Files
