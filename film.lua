@@ -5,9 +5,6 @@ require("stringutil")
 local Keyframe = require("keyframe")
 local Timeline = require("timeline")
 
--- The binary most likely isn't at original framerate (30), so we scale up the "current frame" we're on
-local realFPS = 30
-
 local Film = {}
 Film.__index = Film
 
@@ -36,11 +33,8 @@ Film.new = function(dirPath)
     self.fps = 30
     self.path = dirPath
     self.totalFrames = 0
-    self.warning = false
-    self.warningTimer = 0
     self.framesInMemory = 0
     self.cachedFrontier = 0
-    self.preloading = false
     self.playRealTime = false
     self.realTime = 0
     self.timeline = Timeline.new(self)
@@ -58,8 +52,6 @@ Film.new = function(dirPath)
 end
 
 Film.update = function(self, dt)
-    self.preloading = false
-    
     -- Handle realtime playback
     if self.playRealTime then
         self.realTime = self.realTime + dt * self.fps
@@ -113,16 +105,13 @@ Film.status = function(self)
     return "time: " .. self:timeString() .. "\t" .. self.framesInMemory .. " images in memory" .. "\t"
 end
 
--- TODO: this conversion doesn't quite work right if the framerate isn't 15
--- This isn't a huge problem because all of the binaries will be 15 fps
 Film.timeString = function(self, x)
     if x == nil then
         x = self.playhead
     end
-    local video_frame = (x - 1) * (realFPS / self.fps)
-    local seconds = math.floor(video_frame / realFPS)
+    local seconds = math.floor((x - 1) / self.fps)
     return string.format("%02d", math.floor(seconds / 60)) ..
-    ":" .. string.format("%02d", seconds % 60) .. ";" .. string.format("%02d", video_frame % realFPS)
+    ":" .. string.format("%02d", seconds % 60) .. ";" .. string.format("%02d", (x - 1) % self.fps)
 end
 
 Film.timeStringToFrames = function(self, timeString)

@@ -64,6 +64,7 @@ function updateWindowTitle()
 		'"p3d shirt would be just a recreation of a shirt but made inaccurately"',
 		'"we need more sd matadors" "no"',
 		'"dynamic smug cheese"',
+		'"speaking of ntsc" "i solved petscop"',
 		'"we hereby declare your work zone lead inaccurate"',
 		'"you guys like ntsc" "james when did you become a drug dealer"',
 		'"what is even happening" "I am recreating tony" "oh no"'

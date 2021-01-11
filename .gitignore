@@ -8,7 +8,6 @@ love.exe
 lua51.dll
 mpg123.dll
 output.txt
-README.txt
 SDL2.dll
 compile.bat
 compilelist.txt
