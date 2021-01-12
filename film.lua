@@ -66,9 +66,9 @@ Film.update = function(self, dt)
     end
     
     if math.floor(self.playhead / self.chunkSize) ~= self.currentChunk then
-        self:h_loadAt(((self.currentChunk + 1) * self.chunkSize) + 1, self.chunkSize)
-        self:h_eraseAt(((self.currentChunk - 2) * self.chunkSize) + 1, self.chunkSize)
         self.currentChunk = math.floor(self.playhead / self.chunkSize)
+        self:h_loadAt(((self.currentChunk - 2) * self.chunkSize) + 1, self.chunkSize * 3)
+        self:h_clearData()
     end
     
     self.timeline:update(dt)
@@ -96,7 +96,11 @@ Film.getFrameImage = function(self, index)
 end
 
 Film.movePlayheadTo = function(self, index)
-    if index > 0 and index < self.totalFrames + 1 then
+    if index < 1 then
+        self.playhead = 1
+    elseif index > self.totalFrames then
+        self.playhead = self.totalFrames
+    else
         self.playhead = index
     end
 end
@@ -230,7 +234,7 @@ end
 -- the most nearby stuff
 Film.h_clearData = function(self)
     for i = 0, self.totalFrames do
-        if i < (((math.floor(self.playhead / self.chunkSize) - 2) * self.chunkSize) + 1) or i > (((math.floor(self.playhead / self.chunkSize) + 1) * self.chunkSize) + 1) then
+        if i < (((math.floor(self.playhead / self.chunkSize) - 2) * self.chunkSize) + 1) or i > (((math.floor(self.playhead / self.chunkSize) + 1) * self.chunkSize)) then
             if self.data[i] then
                 self.framesInMemory = self.framesInMemory - 1
                 self.data[i]:release()
