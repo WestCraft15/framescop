@@ -96,7 +96,7 @@ Film.getFrameImage = function(self, index)
 end
 
 Film.movePlayheadTo = function(self, index)
-    if index > 0 and index < self.totalFrames then
+    if index > 0 and index < self.totalFrames + 1 then
         self.playhead = index
     end
 end
@@ -220,7 +220,7 @@ Film.h_decompress = function(self, chunk)
     end
     for i = 1, 2, 0 do
         if #love.filesystem.getDirectoryItems(self.path) == #DECOMPRESSED_FRAMES + #self.offsets + 1 then
-            self.totalFrames = self.allFrames - 1
+            self.totalFrames = self.allFrames
             break
         end
     end

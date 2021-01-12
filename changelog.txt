@@ -1,21 +1,23 @@
+v0.3:
+* Fixed the last 2 frames of video being inaccessible
+
 v0.2:
-+ Video Compression
-+ Dynamic Video Decompression
-+ Maintain Aspect Ratio
-* FPS Changed to 30 from 15
-* RAM Improvements
-* Button Icons Changed to Match Petscop
-* Fixed Unbounded Playhead
-- Incompatible With Old Videos
-- Removed Drag and Drop Video Conversion (Might be Reimplemented)
-- Removed Run.bat and Run.sh
-- Removed Unnecessary .dll Files
++ Video compression
++ Dynamic video decompression
++ Window scaling locked
+* FPS changed from 15 to 30
+* RAM improvements
+* Button icons changed to ingame Petscop icons
+* Fixed unbounded playhead
+- Incompatible with old videos (Planned)
+- Removed drag and drop video conversion
+- Removed run.bat and run.sh
+- Removed unnecessary .dll files
 
 Planned Features:
-+ Delete Videos From Menu
-+ Options Menu
-	+ Change Window Size
-	+ Change Username
-+ Button to Return to Main Menu From Input Editor
-+ Backwards Compatibility
-+ Button to Show Input Files in File Explorer
++ Delete videos from menu
++ Options menu
+	+ Change window size
+	+ Change username
++ Backwards compatibility
++ Button to show .tsv files in file explorer

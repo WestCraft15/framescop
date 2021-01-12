@@ -160,7 +160,7 @@ function love.draw()
                 love.graphics.setColor(keyframeTickerCurrentFrameColor())
             end
 
-            if currentFilm.playhead + i < 1 then
+            if currentFilm.playhead + i < 1 or currentFilm.playhead + i > currentFilm.totalFrames then
                 love.graphics.setColor(darkgray())
             end
 
