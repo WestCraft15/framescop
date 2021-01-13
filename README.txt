@@ -1,4 +1,4 @@
-Thank you for downloading Framescop: Giftscop Edition (v0.2).
+Thank you for downloading Framescop: Giftscop Edition.
 
 There are several improvements over the main version of Framescop that will
 hopefully make this more useful for recerating inputs to use in Giftscop.
