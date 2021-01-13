@@ -82,7 +82,7 @@ function love.draw()
         local binaries = loadWorkingDirectory()
         if #binaries == 0 then
             love.filesystem.createDirectory("framedata")
-            love.graphics.print("No data found. Please drag an MP4\nvideo onto the included .bat file\n\nYou will need to restart if you just added a new video.")
+            love.graphics.print("No data found. Please drag an MP4\nvideo onto the included .bat file\n\nYou will need to restart Framescop to see the new video.")
         end
 
         -- File select menu: I threw this together in 5 minutes.
