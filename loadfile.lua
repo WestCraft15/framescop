@@ -1,6 +1,5 @@
 WorkingDirectoryBinaries = nil
 -- Loads all binaries in working directory
--- Or loads the cached list if it exists
 function loadWorkingDirectory()
     if WorkingDirectoryBinaries then
         return WorkingDirectoryBinaries
@@ -19,13 +18,24 @@ function loadWorkingDirectory()
                     obj = {}
                     obj.path = path
                     obj.filename = folderName
-                    -- TODO: This gets repeated in film.lua, extract this out
                     local lines = love.filesystem.read(path .. "/" .. filename):split("\n")
                     obj.niceTitle = lines[1]
                     obj.fps = tonumber(lines[2])
                     WorkingDirectoryBinaries[#WorkingDirectoryBinaries + 1] = obj
                 elseif filename == "1.png" then
-                    -- TODO: Have this compress the PNGs before loading them
+                    local output = love.filesystem.getSaveDirectory() .. "\\framedata\\" .. folderName
+                    local command = '.\\frame_extractor.bat a "' .. folderName .. '"'
+                    local thread = love.thread.newThread("ffmpeg_bootstrap.lua")
+                    THREAD_POOL[#THREAD_POOL + 1] = thread
+                    thread:start(command, output)
+
+                    obj = {}
+                    obj.path = path
+                    obj.filename = folderName
+                    local lines = love.filesystem.read(path .. "/" .. filename):split("\n")
+                    obj.niceTitle = lines[1]
+                    obj.fps = tonumber(lines[2])
+                    WorkingDirectoryBinaries[#WorkingDirectoryBinaries + 1] = obj
                 end
             end
         end
