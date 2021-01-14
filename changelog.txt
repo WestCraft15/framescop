@@ -2,7 +2,7 @@ v0.3:
 + Compatability with original version's videos
 + Keyframe ticker now shows end of file
 + Added delete button for videos
-+ Added FFProbe.exe
++ Added ffprobe.exe (I swear this wasn't needed before??)
 * Fixed the last 2 frames of the video being inaccessible
 * Fixed major stuttering when playing the video in reverse
 * Fixed playhead not updating when dragging to edges
@@ -15,7 +15,7 @@ v0.2:
 * RAM improvements
 * Button icons changed to ingame Petscop icons
 * Fixed unbounded playhead
-- Incompatible with old videos (Planned)
+- Incompatible with old videos
 - Removed drag and drop video conversion
 - Removed run.bat and run.sh
 - Removed unnecessary .dll files
