@@ -10,7 +10,14 @@ if "%video%"=="a" (
   set output_folder="%AppData%\framescop\framedata\%~2"
   goto :compress
 )
+if 1==2 (
+  :nospace
+  echo Video name can't contain spaces!
+  pause>nul
+  goto :eof
+)
 set /p name=Video Name (no-spaces): 
+for /f "tokens=2" %%a in ("%name%") do goto :nospace
 set output_folder="%AppData%\framescop\framedata\%name%"
 mkdir "%output_folder%"
 del "%output_folder%\*.mp4"
