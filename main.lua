@@ -86,10 +86,15 @@ function love.draw()
         end
 
         -- File select menu
-        -- TODO: make this use the new button.normal() function
         local mx, my = love.mouse.getPosition()
         for i, obj in ipairs(binaries) do
-            if binaries[i] ~= "empty" then
+            if i > 7 then
+                love.graphics.setFont(BigFont)
+                local x = 150
+                local y = 30
+                love.graphics.print("Too many videos to display!", 150, 30 + (i - 1) * 60)
+                break
+            elseif binaries[i] ~= "empty" then
                 if love.keyboard.isDown(i) then
                     love.graphics.setColor(0.5, 0.5, 1)
                     currentFilm = Film.new(obj.path)
@@ -198,6 +203,35 @@ function love.draw()
 
         love.graphics.setColor(white())
         love.graphics.print("Show Saves", x, y + 8 * 60)
+
+        love.graphics.setFont(BigFont)
+        x = 150
+        if
+            mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Options") and my > y + 8 * 60 and
+                my < y + 8 * 60 + love.graphics.getFont():getHeight()
+        then
+            love.graphics.setColor(0, 0, 1)
+            love.graphics.rectangle(
+                "fill",
+                x - 3,
+                y + 8 * 60,
+                love.graphics.getFont():getWidth("Options") + 8,
+                love.graphics.getFont():getHeight()
+            )
+            if love.mouse.isDown(1) then
+            end
+        end
+        love.graphics.setColor(white())
+        love.graphics.rectangle(
+            "line",
+            x - 3,
+            y + 8 * 60,
+            love.graphics.getFont():getWidth("Options") + 8,
+            love.graphics.getFont():getHeight()
+        )
+
+        love.graphics.setColor(white())
+        love.graphics.print("Options", x, y + 8 * 60)
     end
 
     if currentFilm then

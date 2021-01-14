@@ -1,3 +1,7 @@
+v0.4:
++ Temporary "Too many videos to display!" text
+* Fixed a crash caused by having too many videos stored
+
 v0.3:
 + Compatability with original version's videos
 + Keyframe ticker now shows end of file
@@ -10,12 +14,12 @@ v0.3:
 v0.2:
 + Video compression
 + Dynamic video decompression
-+ Window scaling locked
+* Window scaling locked
 * FPS changed from 15 to 30
 * RAM improvements
-* Button icons changed to ingame Petscop icons
+* Button icons changed to reflect Petscop
 * Fixed unbounded playhead
-- Incompatible with old videos
+- Compatability with original version's videos
 - Removed drag and drop video conversion
 - Removed run.bat and run.sh
 - Removed unnecessary .dll files
@@ -24,4 +28,3 @@ Planned Features:
 + Options menu
 	+ Change window size
 	+ Change username
-* Fix crash when too many videos exist

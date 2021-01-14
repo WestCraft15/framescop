@@ -11,8 +11,6 @@ function Button.normal(label, x, y, width, height, action)
         love.graphics.setColor(buttonHighlightColor())
         -- You wanna see something crazy? Go find what this string is used for
         CURRENT_MOUSEOVER_TARGET = "Button_" .. action
-        if love.mouse.isDown(0) then
-        end
     end
     love.graphics.setFont(LOVEdefaultFont)
     love.graphics.rectangle("fill", x, y, width, height)
