@@ -87,6 +87,7 @@ function love.draw()
 
         -- File select menu
         -- TODO: make this use the new button.normal() function
+        local mx, my = love.mouse.getPosition()
         for i, obj in ipairs(binaries) do
             if binaries[i] ~= "empty" then
                 if love.keyboard.isDown(i) then
@@ -98,15 +99,6 @@ function love.draw()
                 local textX = 150
                 local y = 30
                 local buttonText = obj.filename
-                local mx, my = love.mouse.getPosition()
-                love.graphics.setColor(white())
-                love.graphics.rectangle(
-                    "line",
-                    x - 3,
-                    y + (i - 1) * 60,
-                    love.graphics.getFont():getWidth("Start") + 8,
-                    love.graphics.getFont():getHeight()
-                )
                 if
                     mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Start") and my > y + (i - 1) * 60 and
                         my < y + (i - 1) * 60 + love.graphics.getFont():getHeight()
@@ -123,15 +115,15 @@ function love.draw()
                         currentFilm = Film.new(obj.path)
                     end
                 end
-                
                 love.graphics.setColor(white())
                 love.graphics.rectangle(
                     "line",
-                    x + 97,
+                    x - 3,
                     y + (i - 1) * 60,
-                    love.graphics.getFont():getWidth("Delete") + 8,
+                    love.graphics.getFont():getWidth("Start") + 8,
                     love.graphics.getFont():getHeight()
                 )
+                
                 if
                     mx > x + 97 and mx < x + love.graphics.getFont():getWidth("Delete") + 108 and my > y + (i - 1) * 60 and
                         my < y + (i - 1) * 60 + love.graphics.getFont():getHeight()
@@ -160,6 +152,14 @@ function love.draw()
                         binaries[i] = "empty"
                     end
                 end
+                love.graphics.setColor(white())
+                love.graphics.rectangle(
+                    "line",
+                    x + 97,
+                    y + (i - 1) * 60,
+                    love.graphics.getFont():getWidth("Delete") + 8,
+                    love.graphics.getFont():getHeight()
+                )
 
                 love.graphics.setColor(white())
                 love.graphics.print(buttonText, textX, y + (i - 1) * 60)
@@ -168,30 +168,36 @@ function love.draw()
             end
         end
 
-        love.graphics.setColor(white())
-        love.graphics.rectangle(
-            "line",
-            x + 97,
-            y + (i - 1) * 60,
-            love.graphics.getFont():getWidth("Delete") + 8,
-            love.graphics.getFont():getHeight()
-        )
+        love.graphics.setFont(BigFont)
+        local x = 650 + love.graphics.getFont():getWidth("Delete") - love.graphics.getFont():getWidth("Show Saves")
+        local y = 30
         if
-            mx > x + 97 and mx < x + love.graphics.getFont():getWidth("Delete") + 108 and my > y + (i - 1) * 60 and
-                my < y + (i - 1) * 60 + love.graphics.getFont():getHeight()
+            mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Show Saves") and my > y + 8 * 60 and
+                my < y + 8 * 60 + love.graphics.getFont():getHeight()
         then
             love.graphics.setColor(0, 0, 1)
             love.graphics.rectangle(
                 "fill",
-                x + 97,
-                y + (i - 1) * 60,
-                love.graphics.getFont():getWidth("Delete") + 8,
+                x - 3,
+                y + 8 * 60,
+                love.graphics.getFont():getWidth("Show Saves") + 8,
                 love.graphics.getFont():getHeight()
             )
             if love.mouse.isDown(1) then
-                
+                love.system.openURL("file://" .. love.filesystem.getSaveDirectory())
             end
         end
+        love.graphics.setColor(white())
+        love.graphics.rectangle(
+            "line",
+            x - 3,
+            y + 8 * 60,
+            love.graphics.getFont():getWidth("Show Saves") + 8,
+            love.graphics.getFont():getHeight()
+        )
+
+        love.graphics.setColor(white())
+        love.graphics.print("Show Saves", x, y + 8 * 60)
     end
 
     if currentFilm then

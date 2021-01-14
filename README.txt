@@ -28,13 +28,16 @@ screen to move forwards and backwards in the video, and when it looks like
 the player presses a button, click the coresponding button in the lower
 right.
 
+When you're done, press CTRL+S to save your work. To view the file you
+just made, relaunch Framescop and press the "Show Saves" button.
+
 ----------------------------------------------------------------------------
 
 Credtis
 
 notexplosive - Original creator of Framescop
 WestCraft15 - Modified notexplosive's code
-Giftscop Community - Provided suggestions and coding help
+Giftscop Community - Provided suggestions and help with .bat files
 
 ----------------------------------------------------------------------------
 
