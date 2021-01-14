@@ -11,6 +11,7 @@ local Keyframe = require("keyframe")
 local FileManager = require("file_manager")
 
 local videosOffset = 0
+local videosOffsetAdd = 0
 local mouseWait = 0
 
 require("tests.test_all")
@@ -85,7 +86,7 @@ function love.draw()
         local binaries = loadWorkingDirectory()
         if #binaries == 0 then
             love.filesystem.createDirectory("framedata")
-            love.graphics.print("No data found. Please drag an MP4\nvideo onto the included .bat file\n\nYou will need to restart Framescop to see the new video.")
+            love.graphics.print("No videos found. Please drag a\nvideo onto the included .bat file.\n\nYou will need to restart Framescop to see the new video.")
         end
 
         -- File select menu
@@ -108,7 +109,7 @@ function love.draw()
                         love.graphics.getFont():getHeight()
                     )
                     if love.mouse.isDown(1) and mouseWait == 0 then
-                        videosOffset = videosOffset + 7
+                        videosOffsetAdd = 7
                         mouseWait = 1
                     elseif not love.mouse.isDown(1) then
                         mouseWait = 0
@@ -126,7 +127,7 @@ function love.draw()
                 love.graphics.setColor(white())
                 love.graphics.print("Next", x + 100, y + (i - 1 - videosOffset) * 60)
                 break
-            elseif binaries[i - videosOffset] ~= "empty" and i - videosOffset > 0 then
+            elseif binaries[i] ~= "empty" and i - videosOffset > 0 then
                 if love.keyboard.isDown(i - videosOffset) then
                     love.graphics.setColor(0.5, 0.5, 1)
                     currentFilm = Film.new(obj.path)
@@ -186,7 +187,7 @@ function love.draw()
                             love.filesystem.remove(item)
                         end
                         recursivelyDelete("framedata/" .. obj.filename)
-                        binaries[i - videosOffset] = "empty"
+                        binaries[i] = "empty"
                     end
                 end
                 love.graphics.setColor(white())
@@ -222,7 +223,7 @@ function love.draw()
                     love.graphics.getFont():getHeight()
                 )
                 if love.mouse.isDown(1) and mouseWait == 0 then
-                    videosOffset = videosOffset - 7
+                    videosOffsetAdd = -7
                     mouseWait = 1
                 elseif not love.mouse.isDown(1) then
                     mouseWait = 0
@@ -287,6 +288,7 @@ function love.draw()
                 love.graphics.getFont():getHeight()
             )
             if love.mouse.isDown(1) then
+                CURRENT_AUTHOR = ""
             end
         end
         love.graphics.setColor(white())
@@ -300,6 +302,9 @@ function love.draw()
 
         love.graphics.setColor(white())
         love.graphics.print("Change Username", x, y + 8 * 60)
+
+        videosOffset = videosOffset + videosOffsetAdd
+        videosOffsetAdd = 0
     end
 
     if currentFilm then
