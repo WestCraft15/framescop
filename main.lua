@@ -85,44 +85,112 @@ function love.draw()
             love.graphics.print("No data found. Please drag an MP4\nvideo onto the included .bat file\n\nYou will need to restart Framescop to see the new video.")
         end
 
-        -- File select menu: I threw this together in 5 minutes.
+        -- File select menu
         -- TODO: make this use the new button.normal() function
         for i, obj in ipairs(binaries) do
-            if love.keyboard.isDown(i) then
-                love.graphics.setColor(0.5, 0.5, 1)
-                currentFilm = Film.new(obj.path)
-            end
-            love.graphics.setFont(BigFont)
-            local x = 200
-            local y = 20
-            local buttonText = obj.filename
-            love.graphics.rectangle(
-                "line",
-                x,
-                y + (i - 1) * 64,
-                love.graphics.getFont():getWidth(buttonText) + 8,
-                love.graphics.getFont():getHeight() + 8
-            )
-            local mx, my = love.mouse.getPosition()
-            if
-                mx > x and mx < x + love.graphics.getFont():getWidth(buttonText) and my > y + (i - 1) * 64 and
-                    my < y + (i - 1) * 64 + love.graphics.getFont():getHeight()
-             then
-                love.graphics.setColor(0, 0, 1)
-                love.graphics.rectangle(
-                    "fill",
-                    x,
-                    y + (i - 1) * 64,
-                    love.graphics.getFont():getWidth(buttonText) + 8,
-                    love.graphics.getFont():getHeight() + 8
-                )
-                if love.mouse.isDown(1) then
+            if binaries[i] ~= "empty" then
+                if love.keyboard.isDown(i) then
+                    love.graphics.setColor(0.5, 0.5, 1)
                     currentFilm = Film.new(obj.path)
                 end
+                love.graphics.setFont(BigFont)
+                local x = 550
+                local textX = 150
+                local y = 30
+                local buttonText = obj.filename
+                local mx, my = love.mouse.getPosition()
+                love.graphics.setColor(white())
+                love.graphics.rectangle(
+                    "line",
+                    x - 3,
+                    y + (i - 1) * 60,
+                    love.graphics.getFont():getWidth("Start") + 8,
+                    love.graphics.getFont():getHeight()
+                )
+                if
+                    mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Start") and my > y + (i - 1) * 60 and
+                        my < y + (i - 1) * 60 + love.graphics.getFont():getHeight()
+                then
+                    love.graphics.setColor(0, 0, 1)
+                    love.graphics.rectangle(
+                        "fill",
+                        x - 3,
+                        y + (i - 1) * 60,
+                        love.graphics.getFont():getWidth("Start") + 8,
+                        love.graphics.getFont():getHeight()
+                    )
+                    if love.mouse.isDown(1) then
+                        currentFilm = Film.new(obj.path)
+                    end
+                end
+                
+                love.graphics.setColor(white())
+                love.graphics.rectangle(
+                    "line",
+                    x + 97,
+                    y + (i - 1) * 60,
+                    love.graphics.getFont():getWidth("Delete") + 8,
+                    love.graphics.getFont():getHeight()
+                )
+                if
+                    mx > x + 97 and mx < x + love.graphics.getFont():getWidth("Delete") + 108 and my > y + (i - 1) * 60 and
+                        my < y + (i - 1) * 60 + love.graphics.getFont():getHeight()
+                then
+                    love.graphics.setColor(0, 0, 1)
+                    love.graphics.rectangle(
+                        "fill",
+                        x + 97,
+                        y + (i - 1) * 60,
+                        love.graphics.getFont():getWidth("Delete") + 8,
+                        love.graphics.getFont():getHeight()
+                    )
+                    if love.mouse.isDown(1) and love.mouse.isDown(2) then
+                        local function recursivelyDelete( item )
+                            if love.filesystem.getInfo(item , "directory") then
+                                for _, child in pairs(love.filesystem.getDirectoryItems(item)) do
+                                    recursivelyDelete(item .. '/' .. child)
+                                    love.filesystem.remove(item .. '/' .. child)
+                                end
+                            elseif love.filesystem.getInfo(item) then
+                                love.filesystem.remove(item)
+                            end
+                            love.filesystem.remove(item)
+                        end
+                        recursivelyDelete("framedata/" .. obj.filename)
+                        binaries[i] = "empty"
+                    end
+                end
+
+                love.graphics.setColor(white())
+                love.graphics.print(buttonText, textX, y + (i - 1) * 60)
+                love.graphics.print("Start", x, y + (i - 1) * 60)
+                love.graphics.print("Delete", x + 100, y + (i - 1) * 60)
             end
-            love.graphics.setColor(white())
-            love.graphics.print(buttonText, x, y + (i - 1) * 64)
-            love.graphics.setColor(white())
+        end
+
+        love.graphics.setColor(white())
+        love.graphics.rectangle(
+            "line",
+            x + 97,
+            y + (i - 1) * 60,
+            love.graphics.getFont():getWidth("Delete") + 8,
+            love.graphics.getFont():getHeight()
+        )
+        if
+            mx > x + 97 and mx < x + love.graphics.getFont():getWidth("Delete") + 108 and my > y + (i - 1) * 60 and
+                my < y + (i - 1) * 60 + love.graphics.getFont():getHeight()
+        then
+            love.graphics.setColor(0, 0, 1)
+            love.graphics.rectangle(
+                "fill",
+                x + 97,
+                y + (i - 1) * 60,
+                love.graphics.getFont():getWidth("Delete") + 8,
+                love.graphics.getFont():getHeight()
+            )
+            if love.mouse.isDown(1) then
+                
+            end
         end
     end
 

@@ -1,4 +1,7 @@
 v0.3:
++ Compatability with original version's videos
++ Keyframe ticker now shows end of file
++ Added delete button for videos
 * Fixed the last 2 frames of the video being inaccessible
 * Fixed major stuttering when playing the video in reverse
 * Fixed playhead not updating when dragging to edges
@@ -17,10 +20,8 @@ v0.2:
 - Removed unnecessary .dll files
 
 Planned Features:
-+ Delete videos from menu
 + Options menu
 	+ Change window size
 	+ Change username
-+ Backwards compatibility
 + Button to show .tsv files in file explorer
 * Fix crash when too many videos exist
