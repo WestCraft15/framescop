@@ -1,13 +1,15 @@
-v0.4:
-+ Change username button (Nonfunctional)
+v1.0:
++ Added change username button
 + Added pages of videos
++ Added button to show saves
 * Fixed a crash caused by having too many videos stored
+* Fixed file names actually allowing spaces and causing problems
 
 v0.3:
 + Compatability with original version's videos
 + Keyframe ticker now shows end of file
 + Added delete button for videos
-+ Added ffprobe.exe (I swear this wasn't needed before??)
++ Added ffprobe.exe
 * Fixed the last 2 frames of the video being inaccessible
 * Fixed major stuttering when playing the video in reverse
 * Fixed playhead not updating when dragging to edges
@@ -24,6 +26,3 @@ v0.2:
 - Removed drag and drop video conversion
 - Removed run.bat and run.sh
 - Removed unnecessary .dll files
-
-Planned Features:
-+ Change username

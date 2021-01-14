@@ -134,7 +134,7 @@ function love.draw()
                 end
                 love.graphics.setFont(BigFont)
                 local x = 550
-                local textX = 150
+                local textX = 60
                 local y = 30
                 local buttonText = obj.filename
                 if
@@ -208,7 +208,7 @@ function love.draw()
 
         if videosOffset > 0 then
             love.graphics.setFont(BigFont)
-            local x = 150
+            local x = 60
             local y = 30
             if
             mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Back") and my > y + 7 * 60 and
@@ -274,7 +274,7 @@ function love.draw()
         love.graphics.print("Show Saves", x, y + 8 * 60)
 
         love.graphics.setFont(BigFont)
-        x = 150
+        x = 60
         if
             mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Change Username") and my > y + 8 * 60 and
                 my < y + 8 * 60 + love.graphics.getFont():getHeight()
