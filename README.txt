@@ -6,7 +6,8 @@ hopefully make this more useful for recerating inputs to use in Giftscop.
 Included in this folder is a changelog file so you can see the various
 changes made in this version of Framescop.
 
-I have also included a short tutorial below to help new users get started.
+I have also included a short tutorial below to help new users get started,
+but it is still recommended for those who haven't used this version before.
 
 If you find any bugs (which you probably will, as this is a development
 build), please DM WestCraft15#0744 on Discord with any information.
@@ -28,8 +29,11 @@ screen to move forwards and backwards in the video, and when it looks like
 the player presses a button, click the coresponding button in the lower
 right.
 
-When you're done, press CTRL+S to save your work. To view the .tsv file you
+When you're done, press CTRL+S to save your work. To view the file you
 just made, relaunch Framescop and press the "Show Saves" button.
+
+If you ever want to delete a video, click the delete button with both the
+left and right mouse buttons simultaneously (This doesn't delete the .tsv).
 
 ----------------------------------------------------------------------------
 
