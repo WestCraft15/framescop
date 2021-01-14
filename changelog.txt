@@ -1,4 +1,5 @@
 v0.4:
++ Options button (Nonfunctional)
 + Temporary "Too many videos to display!" text
 * Fixed a crash caused by having too many videos stored
 
