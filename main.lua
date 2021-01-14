@@ -10,6 +10,9 @@ local Film = require("film")
 local Keyframe = require("keyframe")
 local FileManager = require("file_manager")
 
+local videosOffset = 0
+local mouseWait = 0
+
 require("tests.test_all")
 
 iconData = love.image.newImageData("icon.png")
@@ -88,14 +91,43 @@ function love.draw()
         -- File select menu
         local mx, my = love.mouse.getPosition()
         for i, obj in ipairs(binaries) do
-            if i > 7 then
+            if i - videosOffset > 7 then
                 love.graphics.setFont(BigFont)
-                local x = 150
+                local x = 550 + love.graphics.getFont():getWidth("Delete") - love.graphics.getFont():getWidth("Next")
                 local y = 30
-                love.graphics.print("Too many videos to display!", 150, 30 + (i - 1) * 60)
+                if
+                mx > x + 97 and mx < x + love.graphics.getFont():getWidth("Next") + 108 and my > y + (i - 1 - videosOffset) * 60 and
+                my < y + (i - 1 - videosOffset) * 60 + love.graphics.getFont():getHeight()
+                then
+                    love.graphics.setColor(0, 0, 1)
+                    love.graphics.rectangle(
+                        "fill",
+                        x + 97,
+                        y + (i - 1 - videosOffset) * 60,
+                        love.graphics.getFont():getWidth("Next") + 8,
+                        love.graphics.getFont():getHeight()
+                    )
+                    if love.mouse.isDown(1) and mouseWait == 0 then
+                        videosOffset = videosOffset + 7
+                        mouseWait = 1
+                    elseif not love.mouse.isDown(1) then
+                        mouseWait = 0
+                    end
+                end
+                love.graphics.setColor(white())
+                love.graphics.rectangle(
+                    "line",
+                    x + 97,
+                    y + (i - 1 - videosOffset) * 60,
+                    love.graphics.getFont():getWidth("Next") + 8,
+                    love.graphics.getFont():getHeight()
+                )
+                
+                love.graphics.setColor(white())
+                love.graphics.print("Next", x + 100, y + (i - 1 - videosOffset) * 60)
                 break
-            elseif binaries[i] ~= "empty" then
-                if love.keyboard.isDown(i) then
+            elseif binaries[i - videosOffset] ~= "empty" and i - videosOffset > 0 then
+                if love.keyboard.isDown(i - videosOffset) then
                     love.graphics.setColor(0.5, 0.5, 1)
                     currentFilm = Film.new(obj.path)
                 end
@@ -105,14 +137,14 @@ function love.draw()
                 local y = 30
                 local buttonText = obj.filename
                 if
-                    mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Start") and my > y + (i - 1) * 60 and
-                        my < y + (i - 1) * 60 + love.graphics.getFont():getHeight()
+                mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Start") and my > y + (i - 1 - videosOffset) * 60 and
+                my < y + (i - 1 - videosOffset) * 60 + love.graphics.getFont():getHeight()
                 then
                     love.graphics.setColor(0, 0, 1)
                     love.graphics.rectangle(
                         "fill",
                         x - 3,
-                        y + (i - 1) * 60,
+                        y + (i - 1 - videosOffset) * 60,
                         love.graphics.getFont():getWidth("Start") + 8,
                         love.graphics.getFont():getHeight()
                     )
@@ -124,20 +156,20 @@ function love.draw()
                 love.graphics.rectangle(
                     "line",
                     x - 3,
-                    y + (i - 1) * 60,
+                    y + (i - 1 - videosOffset) * 60,
                     love.graphics.getFont():getWidth("Start") + 8,
                     love.graphics.getFont():getHeight()
                 )
                 
                 if
-                    mx > x + 97 and mx < x + love.graphics.getFont():getWidth("Delete") + 108 and my > y + (i - 1) * 60 and
-                        my < y + (i - 1) * 60 + love.graphics.getFont():getHeight()
+                mx > x + 97 and mx < x + love.graphics.getFont():getWidth("Delete") + 108 and my > y + (i - 1 - videosOffset) * 60 and
+                my < y + (i - 1 - videosOffset) * 60 + love.graphics.getFont():getHeight()
                 then
                     love.graphics.setColor(0, 0, 1)
                     love.graphics.rectangle(
                         "fill",
                         x + 97,
-                        y + (i - 1) * 60,
+                        y + (i - 1 - videosOffset) * 60,
                         love.graphics.getFont():getWidth("Delete") + 8,
                         love.graphics.getFont():getHeight()
                     )
@@ -154,31 +186,67 @@ function love.draw()
                             love.filesystem.remove(item)
                         end
                         recursivelyDelete("framedata/" .. obj.filename)
-                        binaries[i] = "empty"
+                        binaries[i - videosOffset] = "empty"
                     end
                 end
                 love.graphics.setColor(white())
                 love.graphics.rectangle(
                     "line",
                     x + 97,
-                    y + (i - 1) * 60,
+                    y + (i - 1 - videosOffset) * 60,
                     love.graphics.getFont():getWidth("Delete") + 8,
                     love.graphics.getFont():getHeight()
                 )
-
+                
                 love.graphics.setColor(white())
-                love.graphics.print(buttonText, textX, y + (i - 1) * 60)
-                love.graphics.print("Start", x, y + (i - 1) * 60)
-                love.graphics.print("Delete", x + 100, y + (i - 1) * 60)
+                love.graphics.print(buttonText, textX, y + (i - 1 - videosOffset) * 60)
+                love.graphics.print("Start", x, y + (i - 1 - videosOffset) * 60)
+                love.graphics.print("Delete", x + 100, y + (i - 1 - videosOffset) * 60)
             end
         end
 
+        if videosOffset > 0 then
+            love.graphics.setFont(BigFont)
+            local x = 150
+            local y = 30
+            if
+            mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Back") and my > y + 7 * 60 and
+            my < y + 7 * 60 + love.graphics.getFont():getHeight()
+            then
+                love.graphics.setColor(0, 0, 1)
+                love.graphics.rectangle(
+                    "fill",
+                    x - 3,
+                    y + 7 * 60,
+                    love.graphics.getFont():getWidth("Back") + 8,
+                    love.graphics.getFont():getHeight()
+                )
+                if love.mouse.isDown(1) and mouseWait == 0 then
+                    videosOffset = videosOffset - 7
+                    mouseWait = 1
+                elseif not love.mouse.isDown(1) then
+                    mouseWait = 0
+                end
+            end
+            love.graphics.setColor(white())
+            love.graphics.rectangle(
+                "line",
+                x - 3,
+                y + 7 * 60,
+                love.graphics.getFont():getWidth("Back") + 8,
+                love.graphics.getFont():getHeight()
+            )
+            
+            love.graphics.setColor(white())
+            love.graphics.print("Back", x, y + 7 * 60)
+        end
+        
         love.graphics.setFont(BigFont)
         local x = 650 + love.graphics.getFont():getWidth("Delete") - love.graphics.getFont():getWidth("Show Saves")
         local y = 30
         if
-            mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Show Saves") and my > y + 8 * 60 and
-                my < y + 8 * 60 + love.graphics.getFont():getHeight()
+        mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Show Saves") and my > y + 8 * 60 and
+        my < y + 8 * 60 + love.graphics.getFont():getHeight()
         then
             love.graphics.setColor(0, 0, 1)
             love.graphics.rectangle(
@@ -207,7 +275,7 @@ function love.draw()
         love.graphics.setFont(BigFont)
         x = 150
         if
-            mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Options") and my > y + 8 * 60 and
+            mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Change Username") and my > y + 8 * 60 and
                 my < y + 8 * 60 + love.graphics.getFont():getHeight()
         then
             love.graphics.setColor(0, 0, 1)
@@ -215,7 +283,7 @@ function love.draw()
                 "fill",
                 x - 3,
                 y + 8 * 60,
-                love.graphics.getFont():getWidth("Options") + 8,
+                love.graphics.getFont():getWidth("Change Username") + 8,
                 love.graphics.getFont():getHeight()
             )
             if love.mouse.isDown(1) then
@@ -226,12 +294,12 @@ function love.draw()
             "line",
             x - 3,
             y + 8 * 60,
-            love.graphics.getFont():getWidth("Options") + 8,
+            love.graphics.getFont():getWidth("Change Username") + 8,
             love.graphics.getFont():getHeight()
         )
 
         love.graphics.setColor(white())
-        love.graphics.print("Options", x, y + 8 * 60)
+        love.graphics.print("Change Username", x, y + 8 * 60)
     end
 
     if currentFilm then

@@ -1,6 +1,6 @@
 v0.4:
-+ Options button (Nonfunctional)
-+ Temporary "Too many videos to display!" text
++ Change username button (Nonfunctional)
++ Added pages of videos
 * Fixed a crash caused by having too many videos stored
 
 v0.3:
@@ -26,6 +26,4 @@ v0.2:
 - Removed unnecessary .dll files
 
 Planned Features:
-+ Options menu
-	+ Change window size
-	+ Change username
++ Change username
