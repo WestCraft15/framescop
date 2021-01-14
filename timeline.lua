@@ -123,9 +123,7 @@ Timeline.onRelease = function(self, x)
     local frameIndex = self:getFrameIndex(x)
     self.cachedFrontier = 0
     self.isPressed = false
-    --self.film:h_clearData()
     self.film:movePlayheadTo(math.floor(frameIndex))
-    --self.film:movePlayheadTo(x)
 end
 
 return Timeline
