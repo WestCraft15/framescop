@@ -1,7 +1,6 @@
 .vs*
 *.exe
 *.dll
-output.txt
 compile.bat
 compilelist.txt
 framescop.love
