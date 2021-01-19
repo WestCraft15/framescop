@@ -1,3 +1,6 @@
+v1.0.1:
++ Made video select menu look nicer
+
 v1.0:
 + Added change username button
 + Added pages of videos
