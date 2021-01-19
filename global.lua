@@ -26,7 +26,6 @@ currentFilm = nil
 FileMgr = require("file_manager")
 DELIM = "\t"
 FILE_NAME = "empty"
-APP_NAME = "Framescop V1.5"
 CURRENT_AUTHOR = ""
 DECOMPRESSED_FRAMES = {}
 

@@ -14,6 +14,9 @@ local videosOffset = 0
 local videosOffsetAdd = 0
 local mouseWait = 0
 
+local bg = love.graphics.newImage("bg/bg" .. love.math.random(0, 7) .. ".png")
+local bgOffset = 0
+
 require("tests.test_all")
 
 iconData = love.image.newImageData("icon.png")
@@ -62,11 +65,15 @@ end
 
 function love.draw()
     love.graphics.setFont(BigFont)
-
+    
     if not currentFilm then
+
+        drawBG()
+
         if CURRENT_AUTHOR == "" then
             CURRENT_TEXT_BOX.on = true
             love.graphics.setFont(BigFont)
+            love.graphics.setColor(black())
             love.graphics.print(
                 "Type your username so you can be credited.\nLeave blank for 'anonymous'\n\nName: " ..
                     CURRENT_TEXT_BOX.body .. CURRENT_TEXT_BOX.cursor
@@ -82,11 +89,12 @@ function love.draw()
 
             return
         end
-
+        
         local binaries = loadWorkingDirectory()
         if #binaries == 0 then
             love.filesystem.createDirectory("framedata")
-            love.graphics.print("No videos found. Please drag a\nvideo onto the included .bat file.\n\nYou will need to restart Framescop to see the new video.")
+            love.graphics.setColor(black())
+            love.graphics.print("No videos found. Please drag one onto the included .bat file.\n\nYou will need to restart Framescop to see the new video.")
         end
 
         -- File select menu
@@ -100,7 +108,7 @@ function love.draw()
                 mx > x + 97 and mx < x + love.graphics.getFont():getWidth("Next") + 108 and my > y + (i - 1 - videosOffset) * 60 and
                 my < y + (i - 1 - videosOffset) * 60 + love.graphics.getFont():getHeight()
                 then
-                    love.graphics.setColor(0, 0, 1)
+                    love.graphics.setColor(0.2, 0.2, 1)
                     love.graphics.rectangle(
                         "fill",
                         x + 97,
@@ -115,7 +123,7 @@ function love.draw()
                         mouseWait = 0
                     end
                 end
-                love.graphics.setColor(white())
+                love.graphics.setColor(black())
                 love.graphics.rectangle(
                     "line",
                     x + 97,
@@ -124,7 +132,7 @@ function love.draw()
                     love.graphics.getFont():getHeight()
                 )
                 
-                love.graphics.setColor(white())
+                love.graphics.setColor(black())
                 love.graphics.print("Next", x + 100, y + (i - 1 - videosOffset) * 60)
                 break
             elseif binaries[i] ~= "empty" and i - videosOffset > 0 then
@@ -141,7 +149,7 @@ function love.draw()
                 mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Start") and my > y + (i - 1 - videosOffset) * 60 and
                 my < y + (i - 1 - videosOffset) * 60 + love.graphics.getFont():getHeight()
                 then
-                    love.graphics.setColor(0, 0, 1)
+                    love.graphics.setColor(0.2, 0.2, 1)
                     love.graphics.rectangle(
                         "fill",
                         x - 3,
@@ -153,7 +161,7 @@ function love.draw()
                         currentFilm = Film.new(obj.path)
                     end
                 end
-                love.graphics.setColor(white())
+                love.graphics.setColor(black())
                 love.graphics.rectangle(
                     "line",
                     x - 3,
@@ -166,7 +174,7 @@ function love.draw()
                 mx > x + 97 and mx < x + love.graphics.getFont():getWidth("Delete") + 108 and my > y + (i - 1 - videosOffset) * 60 and
                 my < y + (i - 1 - videosOffset) * 60 + love.graphics.getFont():getHeight()
                 then
-                    love.graphics.setColor(0, 0, 1)
+                    love.graphics.setColor(0.2, 0.2, 1)
                     love.graphics.rectangle(
                         "fill",
                         x + 97,
@@ -190,7 +198,7 @@ function love.draw()
                         binaries[i] = "empty"
                     end
                 end
-                love.graphics.setColor(white())
+                love.graphics.setColor(black())
                 love.graphics.rectangle(
                     "line",
                     x + 97,
@@ -199,13 +207,13 @@ function love.draw()
                     love.graphics.getFont():getHeight()
                 )
                 
-                love.graphics.setColor(white())
+                love.graphics.setColor(black())
                 love.graphics.print(buttonText, textX, y + (i - 1 - videosOffset) * 60)
                 love.graphics.print("Start", x, y + (i - 1 - videosOffset) * 60)
                 love.graphics.print("Delete", x + 100, y + (i - 1 - videosOffset) * 60)
             end
         end
-
+        
         if videosOffset > 0 then
             love.graphics.setFont(BigFont)
             local x = 60
@@ -214,7 +222,7 @@ function love.draw()
             mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Back") and my > y + 7 * 60 and
             my < y + 7 * 60 + love.graphics.getFont():getHeight()
             then
-                love.graphics.setColor(0, 0, 1)
+                love.graphics.setColor(0.2, 0.2, 1)
                 love.graphics.rectangle(
                     "fill",
                     x - 3,
@@ -229,7 +237,7 @@ function love.draw()
                     mouseWait = 0
                 end
             end
-            love.graphics.setColor(white())
+            love.graphics.setColor(black())
             love.graphics.rectangle(
                 "line",
                 x - 3,
@@ -238,7 +246,7 @@ function love.draw()
                 love.graphics.getFont():getHeight()
             )
             
-            love.graphics.setColor(white())
+            love.graphics.setColor(black())
             love.graphics.print("Back", x, y + 7 * 60)
         end
         
@@ -249,7 +257,7 @@ function love.draw()
         mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Show Saves") and my > y + 8 * 60 and
         my < y + 8 * 60 + love.graphics.getFont():getHeight()
         then
-            love.graphics.setColor(0, 0, 1)
+            love.graphics.setColor(0.2, 0.2, 1)
             love.graphics.rectangle(
                 "fill",
                 x - 3,
@@ -261,7 +269,7 @@ function love.draw()
                 love.system.openURL("file://" .. love.filesystem.getSaveDirectory())
             end
         end
-        love.graphics.setColor(white())
+        love.graphics.setColor(black())
         love.graphics.rectangle(
             "line",
             x - 3,
@@ -269,17 +277,17 @@ function love.draw()
             love.graphics.getFont():getWidth("Show Saves") + 8,
             love.graphics.getFont():getHeight()
         )
-
-        love.graphics.setColor(white())
+        
+        love.graphics.setColor(black())
         love.graphics.print("Show Saves", x, y + 8 * 60)
-
+        
         love.graphics.setFont(BigFont)
         x = 60
         if
-            mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Change Username") and my > y + 8 * 60 and
-                my < y + 8 * 60 + love.graphics.getFont():getHeight()
+        mx > x - 3 and mx < x + love.graphics.getFont():getWidth("Change Username") and my > y + 8 * 60 and
+        my < y + 8 * 60 + love.graphics.getFont():getHeight()
         then
-            love.graphics.setColor(0, 0, 1)
+            love.graphics.setColor(0.2, 0.2, 1)
             love.graphics.rectangle(
                 "fill",
                 x - 3,
@@ -291,7 +299,7 @@ function love.draw()
                 CURRENT_AUTHOR = ""
             end
         end
-        love.graphics.setColor(white())
+        love.graphics.setColor(black())
         love.graphics.rectangle(
             "line",
             x - 3,
@@ -299,22 +307,22 @@ function love.draw()
             love.graphics.getFont():getWidth("Change Username") + 8,
             love.graphics.getFont():getHeight()
         )
-
-        love.graphics.setColor(white())
+        
+        love.graphics.setColor(black())
         love.graphics.print("Change Username", x, y + 8 * 60)
-
+        
         videosOffset = videosOffset + videosOffsetAdd
         videosOffsetAdd = 0
     end
-
+    
     if currentFilm then
         currentFilm:draw()
         Keyframe.drawUI(currentFilm)
-
+        
         love.graphics.print(currentFilm:status(), 4, love.graphics.getHeight() - 48, 0)
-
+        
         local rootx = 128 + 32 + 8 + 2
-
+        
         -- Keyframe timeline ticker pane
         local sizeOfBuffer = 15
         for i = -sizeOfBuffer, sizeOfBuffer do
@@ -402,5 +410,29 @@ function love.draw()
 
     if MAP_ON then
         Map.draw()
+    end
+end
+
+function drawBG()
+    love.graphics.setColor(white())
+    love.graphics.draw(bg, bgOffset - 250, -150, 0, 1.25, 1.25)
+    love.graphics.draw(bg, bgOffset - 250, 100,  0, 1.25, 1.25)
+    love.graphics.draw(bg, bgOffset - 250, 350,  0, 1.25, 1.25)
+    love.graphics.draw(bg, bgOffset + 0,   -150, 0, 1.25, 1.25)
+    love.graphics.draw(bg, bgOffset + 0,   100,  0, 1.25, 1.25)
+    love.graphics.draw(bg, bgOffset + 0,   350,  0, 1.25, 1.25)
+    love.graphics.draw(bg, bgOffset + 250, -150, 0, 1.25, 1.25)
+    love.graphics.draw(bg, bgOffset + 250, 100,  0, 1.25, 1.25)
+    love.graphics.draw(bg, bgOffset + 250, 350,  0, 1.25, 1.25)
+    love.graphics.draw(bg, bgOffset + 500, -150, 0, 1.25, 1.25)
+    love.graphics.draw(bg, bgOffset + 500, 100,  0, 1.25, 1.25)
+    love.graphics.draw(bg, bgOffset + 500, 350,  0, 1.25, 1.25)
+    love.graphics.draw(bg, bgOffset + 750, -150, 0, 1.25, 1.25)
+    love.graphics.draw(bg, bgOffset + 750, 100,  0, 1.25, 1.25)
+    love.graphics.draw(bg, bgOffset + 750, 350,  0, 1.25, 1.25)
+    bgOffset = bgOffset - 125 * love.timer.getDelta()
+
+    if bgOffset < -100 then
+        bgOffset = bgOffset + 250
     end
 end

@@ -39,6 +39,7 @@ Credtis
 notexplosive - Original creator of Framescop
 WestCraft15 - Modified notexplosive's code
 Giftscop Community - Provided suggestions and some help with batch code
+osyu and Wirelex.exe - Petscop Megasheet [Buttons, Even Care Symbols]
 
 ----------------------------------------------------------------------------
 
