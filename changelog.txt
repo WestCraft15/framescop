@@ -1,7 +1,9 @@
-v1.0.1:
-+ Made video select menu look nicer
-
 v1.0:
++ Made video select menu look nicer
+* Fixed saving causing a crash
+* Fixed frame_extractor.bat again
+
+v0.4:
 + Added change username button
 + Added pages of videos
 + Added button to show saves
