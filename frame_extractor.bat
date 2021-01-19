@@ -33,7 +33,7 @@ setlocal enableextensions
 setlocal enabledelayedexpansion
 set count=0
 for %%x in ("%output_folder%\*.mp4") do (
-  for /f "usebackq" %%i in (`ffprobe -v error -show_entries "stream=nb_frames" -select_streams v:0 -of "default=nokey=1:noprint_wrappers=1" "%output_folder%\!count!.mp4"`) do (
+  for /f "usebackq" %%i in (`%working_dir%\ffprobe.exe -v error -show_entries "stream=nb_frames" -select_streams v:0 -of "default=nokey=1:noprint_wrappers=1" "%output_folder%\!count!.mp4"`) do (
     echo %%i>> "%output_folder%\offsets.txt"
   )
   set /a count+=1
