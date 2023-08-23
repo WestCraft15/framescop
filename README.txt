@@ -7,8 +7,7 @@ changelog.txt has a full list of the modifications I made.
 I have included a short tutorial below to help new users get started, but it
 is still recommended for those who haven't used this version before.
 
-If you find any bugs during use please DM WestCraft15#0744 on Discord or
-tweet @WestCraft15 on Twitter.
+If you find any bugs during use please DM @westcraft15 on Discord.
 
 ----------------------------------------------------------------------------
 
